@@ -1,0 +1,22 @@
+node {
+    def server = Artifactory.server 'JFROG_INSTANCE'
+    def rtDotnet = Artifactory.newDotnetBuild()
+    def buildInfo
+
+    stage ('Clone') {
+        git url: '<GIT_URL>'
+    }
+
+    stage ('Artifactory configuration') {
+        rtDotnet.resolver repo: '<ARTIFACTORY_REPOSITORY>', server: server
+        buildInfo = Artifactory.newBuildInfo()
+    }
+
+    stage ('.NET restore') {
+        rtDotnet.run buildInfo: buildInfo, args: 'restore'
+    }
+
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
+}

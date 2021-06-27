@@ -1,0 +1,25 @@
+image: releases-docker.jfrog.io/jfrog/jfrog-cli-full:latest
+
+before_script:
+  # Configure Artifactory instance
+  - jfrog config add rt --artifactory-url <ARTIFACTORY_URL> --user $JFROG_USERNAME --password $JFROG_PASSWORD --interactive=false
+  # Configure Artifactory repository
+  - jfrog rt go-config --server-id-deploy rt --repo-deploy <ARTIFACTORY_REPOSITORY> --server-id-resolve rt --repo-resolve <ARTIFACTORY_REPOSITORY>
+
+variables:
+  RT_BUILD_NAME: "BUILD-A"
+
+build:
+  script:
+    # Run the go build command
+    - jfrog rt go build --build-name RT_BUILD_NAME --build-number $CI_JOB_ID
+    # Publish v1.0.0 of the package to Artifactory
+      jfrog rt gp v1.0.0 --build-name RT_BUILD_NAME --build-number $CI_JOB_ID
+    # Add the environment variables to the build-info
+    - jfrog rt bce $RT_BUILD_NAME $CI_JOB_ID
+    # Add the git details to the build-info
+    - jfrog rt bag $RT_BUILD_NAME $CI_JOB_ID
+    # Publish the build-info to Artifactory
+    - jfrog rt bp $RT_BUILD_NAME $CI_JOB_ID
+  only:
+    - master

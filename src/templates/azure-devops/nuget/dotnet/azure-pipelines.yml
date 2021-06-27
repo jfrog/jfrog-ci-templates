@@ -1,0 +1,22 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: ArtifactoryDotnetCore@1
+    inputs:
+      command: 'restore'
+      artifactoryService: 'JFROG_INSTANCE'
+      targetResolveRepo: '<ARTIFACTORY_REPOSITORY>'
+      rootPath: '**/*.sln'
+      collectBuildInfo: true
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'
+      includeEnvVars: true
+  - task: ArtifactoryPublishBuildInfo@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'

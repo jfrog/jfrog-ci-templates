@@ -1,0 +1,5 @@
+{
+  "templateName": "Gradle",
+  "description": "Build a java project with Gradle",
+  "filename": "pipelines.yml"
+}

@@ -1,0 +1,27 @@
+name: "Build"
+on: push
+
+jobs:
+  build:
+    runs-on: releases-docker.jfrog.io/jfrog-ecosystem-integration-env
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v1
+        env:
+          JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
+      - name: Run JFrog CLI
+        run: |
+          # Configure Artifactory repositories
+          jfrog rt go-config --server-id-deploy JFROG_INSTANCE --repo-deploy <ARTIFACTORY_REPOSITORY> --server-id-resolve JFROG_INSTANCE --repo-resolve <ARTIFACTORY_REPOSITORY>
+          # Run 'go build'
+          jfrog rt go build
+          # Publish v1.0.0 of the package to Artifactory
+          jfrog rt gp v1.0.0
+          # Collect environment variables and them to the build-info
+          jfrog rt bce
+          # Collect VCS details and add them to the build-info
+          jfrog rt bag
+          # Publish build-info to Artifactory
+          jfrog rt bp

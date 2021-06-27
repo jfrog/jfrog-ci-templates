@@ -1,0 +1,24 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: GoTool@0
+    inputs:
+      version: '1.13.5'
+  - task: ArtifactoryGo@1
+    inputs:
+      command: 'build'
+      artifactoryService: 'JFROG_INSTANCE'
+      resolutionRepo: '<ARTIFACTORY_REPOSITORY>'
+      collectBuildInfo: true
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'
+      includeEnvVars: true
+  - task: ArtifactoryPublishBuildInfo@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'

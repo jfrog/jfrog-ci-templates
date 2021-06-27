@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: '<GIT_URL>'
+            }
+        }
+
+        stage ('Artifactory configuration') {
+            steps {
+                rtDotnetResolver (
+                    id: "DOTNET_RESOLVER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+            }
+        }
+
+        stage ('Exec .NET restore') {
+            steps {
+                rtDotnetRun (
+                    resolverId: "DOTNET_RESOLVER",
+                    args: "restore"
+                )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_INSTANCE"
+                )
+            }
+        }
+    }
+}

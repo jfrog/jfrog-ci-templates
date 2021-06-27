@@ -1,0 +1,5 @@
+{
+  "templateName": "Pip scripted",
+  "description": "Build a Python project with the pip client using scripted syntax",
+  "filename": "Jenkinsfile"
+}

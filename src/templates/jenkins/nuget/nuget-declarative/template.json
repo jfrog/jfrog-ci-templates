@@ -1,0 +1,5 @@
+{
+  "templateName": "NuGet declarative",
+  "description": "Build a .NET project with the nuget client using declarative syntax",
+  "filename": "Jenkinsfile"
+}

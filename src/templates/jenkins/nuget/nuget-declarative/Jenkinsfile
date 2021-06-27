@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: '<GIT_URL>'
+            }
+        }
+
+        stage ('Artifactory configuration') {
+            steps {
+                rtNugetResolver (
+                    id: "NUGET_RESOLVER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+            }
+        }
+
+        stage ('Exec NuGet restore') {
+            steps {
+                rtNugetRun (
+                    resolverId: "NUGET_RESOLVER",
+                    args: "restore"
+                )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_INSTANCE"
+                )
+            }
+        }
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "templateName": ".NET Core CLI",
+  "description": "Build a .NET project with the .NET Core CLI",
+  "filename": "workflow.yml"
+}

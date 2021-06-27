@@ -1,0 +1,5 @@
+{
+  "templateName": "Maven",
+  "description": "Build a java project with Maven",
+  "filename": "workflow.yml"
+}

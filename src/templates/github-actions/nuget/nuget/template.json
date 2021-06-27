@@ -1,0 +1,5 @@
+{
+  "templateName": "NuGet",
+  "description": "Build a .NET project with NuGet",
+  "filename": "workflow.yml"
+}

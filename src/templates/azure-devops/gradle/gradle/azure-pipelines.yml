@@ -1,0 +1,26 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: ArtifactoryGradle@1
+    inputs:
+      gradleBuildFile: 'build.gradle'
+      tasks: 'artifactoryPublish'
+      useWrapper: true
+      artifactoryResolverService: 'JFROG_INSTANCE'
+      sourceRepo: '<ARTIFACTORY_REPOSITORY>'
+      artifactoryDeployerService: 'JFROG_INSTANCE'
+      targetRepo: '<ARTIFACTORY_REPOSITORY>'
+      deployIvyDesc: false
+      collectBuildInfo: true
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'
+      includeEnvVars: true
+  - task: ArtifactoryPublishBuildInfo@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'

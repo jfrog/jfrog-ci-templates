@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    stages {
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: '<GIT_URL>'
+            }
+        }
+
+        stage ('Artifactory configuration') {
+            steps {
+                rtNpmResolver (
+                    id: "NPM_RESOLVER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+
+                rtNpmDeployer (
+                    id: "NPM_DEPLOYER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+            }
+        }
+
+        stage ('Exec npm install') {
+            steps {
+                rtNpmInstall (
+                    // Tool name from Jenkins configuration
+                    tool: "NPM_TOOL",
+                    resolverId: "NPM_RESOLVER"
+                )
+            }
+        }
+
+        stage ('Exec npm publish') {
+            steps {
+                rtNpmPublish (
+                    // Tool name from Jenkins configuration
+                    tool: "NPM_TOOL",
+                    deployerId: "NPM_DEPLOYER"
+                )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_INSTANCE"
+                )
+            }
+        }
+    }
+}

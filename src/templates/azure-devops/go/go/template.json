@@ -1,0 +1,5 @@
+{
+  "templateName": "Go",
+  "description": "Build a Go project",
+  "filename": "azure-pipelines.yml"
+}

@@ -1,0 +1,43 @@
+node {
+    def server = Artifactory.server 'JFROG_INSTANCE'
+    def rtPip = Artifactory.newPipBuild()
+    def buildInfo
+    // pip virtual-environment activation command
+    def virtual_env_activation = "source /Users/myUser/venv-example/bin/activate"
+
+    stage ('Clone') {
+        git url: '<GIT_URL>'
+    }
+
+    stage ('Artifactory configuration') {
+        rtPip.resolver repo: '<ARTIFACTORY_REPOSITORY>', server: server
+        buildInfo = Artifactory.newBuildInfo()
+    }
+
+    stage ('Pip install') {
+        rtPip.install buildInfo: buildInfo, args: "-r requirements.txt", envActivation: virtual_env_activation
+    }
+
+    stage ('Package and create distribution archives') {
+        sh '''
+            $virtual_env_activation
+            python setup.py sdist bdist_wheel
+        '''
+    }
+
+    stage ('Upload packages') {
+        def uploadSpec = """{
+            "files": [
+                {
+                    "pattern": "dist/",
+                    "target": "'<ARTIFACTORY_REPOSITORY>'/"
+                }
+            ]
+        }"""
+        server.upload buildInfo: buildInfo, spec: uploadSpec
+    }
+
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
+}

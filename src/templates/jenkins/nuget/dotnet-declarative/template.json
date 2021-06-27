@@ -1,0 +1,5 @@
+{
+  "templateName": ".NET core declarative",
+  "description": "Build a .NET project with the .NET core CLI using declarative syntax",
+  "filename": "Jenkinsfile"
+}

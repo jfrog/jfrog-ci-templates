@@ -1,0 +1,21 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: ArtifactoryPip@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      command: 'install'
+      targetResolveRepo: '<ARTIFACTORY_REPOSITORY>'
+      collectBuildInfo: true
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'
+      includeEnvVars: true
+  - task: ArtifactoryPublishBuildInfo@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'

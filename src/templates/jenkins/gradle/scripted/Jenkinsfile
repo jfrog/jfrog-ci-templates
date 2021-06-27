@@ -1,0 +1,27 @@
+node {
+    def server
+    def rtGradle = Artifactory.newGradleBuild()
+    def buildInfo = Artifactory.newBuildInfo()
+
+    stage ('Clone') {
+        git url: '<GIT_URL>'
+    }
+
+    stage ('Artifactory configuration') {
+        // Obtain an Artifactory server instance, defined in Jenkins --> Manage Jenkins --> Configure System:
+        server = Artifactory.server 'JFROG_INSTANCE'
+
+        // Tool name from Jenkins configuration
+        rtGradle.tool = 'GRADLE_TOOL'
+        rtGradle.deployer repo: '<ARTIFACTORY_REPOSITORY>', server: server
+        rtGradle.resolver repo: '<ARTIFACTORY_REPOSITORY>', server: server
+    }
+
+    stage ('Exec Gradle') {
+        rtGradle.run buildFile: 'build.gradle', tasks: 'artifactoryPublish', buildInfo: buildInfo
+    }
+
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "templateName": "Go",
+  "description": "Build a Go project",
+  "filename": "workflow.yml"
+}

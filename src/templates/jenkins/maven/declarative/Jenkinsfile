@@ -1,0 +1,50 @@
+
+pipeline {
+    agent any
+    stages {
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: "<GIT_URL>"
+            }
+        }
+
+        stage ('Artifactory configuration') {
+            steps {
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "JFROG_INSTANCE",
+                    releaseRepo: "<ARTIFACTORY_REPOSITORY>",
+                    snapshotRepo: "<ARTIFACTORY_REPOSITORY>"
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "JFROG_INSTANCE",
+                    releaseRepo: "<ARTIFACTORY_REPOSITORY>",
+                    snapshotRepo: "<ARTIFACTORY_REPOSITORY>"
+                )
+            }
+        }
+
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    // Tool name from Jenkins configuration
+                    tool: "MAVEN_TOOL",
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: "MAVEN_DEPLOYER",
+                    resolverId: "MAVEN_RESOLVER"
+                )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_INSTANCE"
+                )
+            }
+        }
+    }
+}

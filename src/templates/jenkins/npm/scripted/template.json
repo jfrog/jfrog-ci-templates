@@ -1,0 +1,5 @@
+{
+  "templateName": "Npm scripted",
+  "description": "Build a node / javascript project with npm using scripted syntax",
+  "filename": "Jenkinsfile"
+}

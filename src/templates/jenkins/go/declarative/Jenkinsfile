@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    stages {
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: '<GIT_URL>'
+            }
+        }
+
+        stage ('Artifactory configuration') {
+            steps {
+                rtGoResolver (
+                    id: "GO_RESOLVER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+
+                rtGoDeployer (
+                    id: "GO_DEPLOYER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+            }
+        }
+
+        stage ('Exec Go run') {
+            steps {
+                rtGoRun (
+                    resolverId: "GO_RESOLVER",
+                    args: "build"
+                )
+            }
+        }
+
+        stage ('Exec Go publish') {
+            steps {
+                rtGoPublish (
+                    deployerId: "GO_DEPLOYER",
+                    version: "1.0.0"
+                )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_INSTANCE"
+                )
+            }
+        }
+    }
+}

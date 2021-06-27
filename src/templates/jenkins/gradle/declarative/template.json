@@ -1,0 +1,5 @@
+{
+  "templateName": "Gradle declarative",
+  "description": "Build a java project with Gradle using declarative syntax",
+  "filename": "Jenkinsfile"
+}

@@ -1,0 +1,28 @@
+node {
+    def server
+    def rtMaven = Artifactory.newMavenBuild()
+    def buildInfo
+
+    stage ('Clone') {
+        git url: '<GIT_URL>'
+    }
+
+    stage ('Artifactory configuration') {
+        // Obtain an Artifactory server instance, defined in Jenkins --> Manage Jenkins --> Configure System:
+        server = Artifactory.server 'JFROG_INSTANCE'
+
+        // Tool name from Jenkins configuration
+        rtMaven.tool = 'MAVEN_TOOL'
+        rtMaven.deployer releaseRepo: '<ARTIFACTORY_REPOSITORY>', snapshotRepo: '<ARTIFACTORY_REPOSITORY>', server: server
+        rtMaven.resolver releaseRepo: '<ARTIFACTORY_REPOSITORY>', snapshotRepo: '<ARTIFACTORY_REPOSITORY>', server: server
+        buildInfo = Artifactory.newBuildInfo()
+    }
+
+    stage ('Exec Maven') {
+        rtMaven.run pom: 'pom.xml', goals: 'install', buildInfo: buildInfo
+    }
+
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
+}

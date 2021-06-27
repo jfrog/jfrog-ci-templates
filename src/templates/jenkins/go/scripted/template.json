@@ -1,0 +1,5 @@
+{
+  "templateName": "Go scripted",
+  "description": "Build a Go project using scripted syntax",
+  "filename": "Jenkinsfile"
+}

@@ -1,0 +1,25 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: ArtifactoryMaven@2
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'install'
+      artifactoryResolverService: 'JFROG_INSTANCE'
+      targetResolveReleaseRepo: '<ARTIFACTORY_REPOSITORY>'
+      targetResolveSnapshotRepo: '<ARTIFACTORY_REPOSITORY>'
+      artifactoryDeployService: 'JFROG_INSTANCE'
+      targetDeployReleaseRepo: '<ARTIFACTORY_REPOSITORY>'
+      targetDeploySnapshotRepo: '<ARTIFACTORY_REPOSITORY>'
+      collectBuildInfo: true
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'
+  - task: ArtifactoryPublishBuildInfo@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'

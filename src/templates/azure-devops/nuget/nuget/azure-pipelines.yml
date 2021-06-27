@@ -1,0 +1,22 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: ArtifactoryNuGet@2
+    inputs:
+      command: 'restore'
+      artifactoryService: 'JFROG_INSTANCE'
+      targetResolveRepo: '<ARTIFACTORY_REPOSITORY>'
+      solutionPath: '**/*.sln'
+      collectBuildInfo: true
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'
+      includeEnvVars: true
+  - task: ArtifactoryPublishBuildInfo@1
+    inputs:
+      artifactoryService: 'JFROG_INSTANCE'
+      buildName: '$(Build.DefinitionName)'
+      buildNumber: '$(Build.BuildNumber)'

@@ -1,0 +1,22 @@
+{
+  "name": "jfrog-ci-templates",
+  "version": "1.0.27",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baviran/ci-templates.git"
+  },
+  "author": "baviran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baviran/ci-templates/issues"
+  },
+  "homepage": "https://github.com/baviran/ci-templates#readme",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  }
+}

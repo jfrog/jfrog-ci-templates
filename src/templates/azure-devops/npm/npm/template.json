@@ -1,0 +1,5 @@
+{
+  "templateName": "Npm",
+  "description": "Build a node / javascript project with npm",
+  "filename": "azure-pipelines.yml"
+}

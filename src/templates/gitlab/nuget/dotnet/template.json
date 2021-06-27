@@ -1,0 +1,5 @@
+{
+  "templateName": ".NET core CLI",
+  "description": "Build a .NET project with the .NET core CLI",
+  "filename": ".gitlab-ci.yml"
+}

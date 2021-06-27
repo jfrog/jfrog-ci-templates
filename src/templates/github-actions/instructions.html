@@ -1,0 +1,11 @@
+<b>Next steps</b><br>
+1. Make sure JFrog CLI is installed on your local machine by running 'jfrog -v'.<br>
+2. Configure the details of your JFrog Platform by running 'jfrog c add'.<br>
+3. Export the details of the JFrog Platform you configured, using the server ID you chose. Do this by running 'jfrog c export <SERVER ID>'.<br>
+4. Copy the generated token to the clipboard and save it as a secret on GitHub.<br>
+5. In the workflow.yml file replace JFROG_INSTANCE with the server ID you configured.<br>
+6. Push the workflow.yml to your git project under .github/workflows/<br>
+<br>
+<b>Additional information</b></br>
+The CI templates are hosted in the <a href="https://github.com/jfrog/jfrog-ci-templates" target="_blank">github.com/jfrog/jfrog-ci-templates</a> repository.<br>
+Read more about the <a href="https://github.com/marketplace/actions/setup-jfrog-cli" target="_blank">Setup JFrog CLI GitHub Action</a> used in the template.

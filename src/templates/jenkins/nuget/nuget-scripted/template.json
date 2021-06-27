@@ -1,0 +1,5 @@
+{
+  "templateName": "NuGet scripted",
+  "description": "Build a .NET project with the nuget client using scripted syntax",
+  "filename": "Jenkinsfile"
+}

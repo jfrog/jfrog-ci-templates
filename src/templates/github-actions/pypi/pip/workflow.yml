@@ -1,0 +1,29 @@
+name: "Build"
+on: push
+
+jobs:
+  build:
+    runs-on: releases-docker.jfrog.io/jfrog-ecosystem-integration-env
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v1
+        env:
+          JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
+      - name: Run JFrog CLI
+        run: |
+          # Configure Artifactory repositories
+          jfrog rt pipc --server-id-resolve JFROG_INSTANCE --repo-resolve <ARTIFACTORY_REPOSITORY>
+          # Run 'pip install'
+          jfrog rt pipi -r requirements.txt
+          # Package the project, create distribution archives (tar.gz and whl)
+          python setup.py sdist bdist_wheel
+          # Upload the packages to the pypi repository in Artifactory:
+          frog rt u dist/ <ARTIFACTORY_REPOSITORY>/
+          # Collect environment variables and them to the build-info
+          jfrog rt bce
+          # Collect VCS details and add them to the build-info
+          jfrog rt bag
+          # Publish build-info to Artifactory
+          jfrog rt bp

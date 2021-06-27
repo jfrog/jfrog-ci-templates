@@ -1,0 +1,5 @@
+{
+  "templateName": "Pip",
+  "description": "Build a Python project with the pip client",
+  "filename": "azure-pipelines.yml"
+}

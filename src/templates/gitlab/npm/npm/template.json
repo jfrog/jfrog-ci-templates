@@ -1,0 +1,5 @@
+{
+  "templateName": "Npm",
+  "description": "Build a node / javascript project with the npm client",
+  "filename": ".gitlab-ci.yml"
+}

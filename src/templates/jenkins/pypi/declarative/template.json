@@ -1,0 +1,5 @@
+{
+  "templateName": "Pip declarative",
+  "description": "Build a Python project with the pip client using declarative syntax",
+  "filename": "Jenkinsfile"
+}

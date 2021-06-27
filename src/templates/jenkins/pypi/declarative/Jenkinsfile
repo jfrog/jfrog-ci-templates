@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    stages {
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: '<GIT_URL>'
+            }
+        }
+
+        stage ('Configuration') {
+            steps {
+                rtPipResolver (
+                    id: "PIP_RESOLVER",
+                    serverId: "JFROG_INSTANCE",
+                    repo: "<ARTIFACTORY_REPOSITORY>"
+                )
+            }
+        }
+
+        stage ('Pip install') {
+            steps {
+                rtPipInstall (
+                    resolverId: "PIP_RESOLVER",
+                    args: "-r requirements.txt",
+                    envActivation: virtual_env_activation
+                )
+            }
+        }
+
+        stage ('Package and create distribution archives') {
+            steps {
+                sh '''
+                    $virtual_env_activation
+                    python setup.py sdist bdist_wheel
+                '''
+            }
+        }
+
+        stage ('Upload packages') {
+            steps {
+                rtUpload (
+                    serverId: "JFROG_INSTANCE",
+                    spec: '''{
+                        "files": [
+                            {
+                                "pattern": "dist/",
+                                "target": "<ARTIFACTORY_REPOSITORY>/"
+                            }
+                        ]
+                    }'''
+                )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_INSTANCE"
+                )
+            }
+        }
+    }
+}

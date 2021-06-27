@@ -1,0 +1,5 @@
+{
+  "templateName": "Pip",
+  "description": "Build a Python project with pip",
+  "filename": "workflow.yml"
+}

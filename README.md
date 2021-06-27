@@ -1,1 +1,1 @@
-# jfrog-cli-templates
+# jfrog-ci-templates

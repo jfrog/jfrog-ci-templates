@@ -10,31 +10,29 @@ pipeline {
 
         stage ('Artifactory configuration') {
             steps {
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
+                rtGradleDeployer (
+                    id: "GRADLE_DEPLOYER",
                     serverId: "JFROG_INSTANCE",
-                    releaseRepo: "<ARTIFACTORY_REPOSITORY>",
-                    snapshotRepo: "<ARTIFACTORY_REPOSITORY>"
+                    repo: "<ARTIFACTORY_REPOSITORY>",
                 )
 
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
+                rtGradleResolver (
+                    id: "GRADLE_RESOLVER",
                     serverId: "JFROG_INSTANCE",
-                    releaseRepo: "<ARTIFACTORY_REPOSITORY>",
-                    snapshotRepo: "<ARTIFACTORY_REPOSITORY>"
+                    repo: "<ARTIFACTORY_REPOSITORY>",
                 )
             }
         }
 
-        stage ('Exec Maven') {
+        stage ('Exec Gradle') {
             steps {
-                rtMavenRun (
+                rtGradleRun (
                     // Tool name from Jenkins configuration
-                    tool: "MAVEN_TOOL",
-                    pom: 'pom.xml',
-                    goals: 'clean install',
-                    deployerId: "MAVEN_DEPLOYER",
-                    resolverId: "MAVEN_RESOLVER"
+                    tool: "GRADLE_TOOL",
+                    buildFile: 'build.gradle',
+                    tasks: 'artifactoryPublish',
+                    deployerId: "GRADLE_DEPLOYER",
+                    resolverId: "GRADLE_RESOLVER",
                 )
             }
         }
